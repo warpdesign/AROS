@@ -1,0 +1,48 @@
+name: Publish CD32 compatibility list
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - arch/m68k-amiga/CD32-COMPATIBILITY.md
+      - arch/m68k-amiga/cd32-compatibility-list/**
+      - .github/workflows/cd32-compat-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    # Pages is only enabled on the fork; skip when this lands upstream.
+    if: github.repository == 'warpdesign/AROS'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Keep the page and the list side by side so its relative fetch works.
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp arch/m68k-amiga/CD32-COMPATIBILITY.md _site/
+          cp -R arch/m68k-amiga/cd32-compatibility-list _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
