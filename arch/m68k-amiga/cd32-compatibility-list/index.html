@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AROS CD32 Game Compatibility</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>
+  // Runs before first paint so the page never flashes the wrong theme.
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
+  function applyTheme() {
+    const choice = localStorage.getItem('theme') || 'system';
+    const theme = choice === 'system' ? (systemDark.matches ? 'dark' : 'light') : choice;
+    document.documentElement.dataset.theme = theme;
+    document.querySelectorAll('.theme-switch button').forEach(b =>
+      b.setAttribute('aria-pressed', b.value === choice));
+  }
+  systemDark.addEventListener('change', applyTheme);
+  applyTheme();
+</script>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f6f7f9; --card: #fff; --text: #1f2328; --muted: #656d76; --border: #e3e6ea;
+    --accent: #3b6fd8; --row-hover: #f3f6fb;
+    --ok-bg: #e6f4ea; --ok-fg: #1f7a3a; --bad-bg: #fdecea; --bad-fg: #b3261e;
+    --todo-bg: #fff4e0; --todo-fg: #9a5b00; --chip-bg: #eef1f5;
+  }
+  :root[data-theme=dark] {
+    color-scheme: dark;
+    --bg: #14171c; --card: #1c2027; --text: #e6e8eb; --muted: #9aa3ad; --border: #2c323b;
+    --accent: #7aa2f7; --row-hover: #222833;
+    --ok-bg: #173323; --ok-fg: #7fd69a; --bad-bg: #3a1c1c; --bad-fg: #f2a19b;
+    --todo-bg: #3a2c12; --todo-fg: #f0c170; --chip-bg: #2a303a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .4rem; letter-spacing: -.01em; }
+  .intro { color: var(--muted); margin: 0; }
+  header {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+    gap: 1.25rem 2rem; margin-bottom: 1.75rem;
+  }
+  .controls { display: flex; flex-direction: column; align-items: flex-end; gap: .9rem; }
+  .search { display: flex; align-items: center; gap: .75rem; }
+  .search input[type=search] { width: 240px; }
+  .theme-switch {
+    display: inline-flex; padding: 3px; gap: 2px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+  }
+  .theme-switch button {
+    font: inherit; font-size: .8rem; color: var(--muted); background: none; border: 0;
+    padding: .25rem .8rem; border-radius: 999px; cursor: pointer;
+  }
+  .theme-switch button:hover { color: var(--text); }
+  .theme-switch button[aria-pressed=true] { background: var(--chip-bg); color: var(--text); font-weight: 600; }
+  .theme-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .meta {
+    display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
+  }
+  .meta dt { color: var(--muted); }
+  .meta dd { margin: 0; }
+
+  label, .count { font-weight: 600; }
+  label { white-space: nowrap; }
+  .count { display: block; }
+  input[type=search] {
+    width: 100%; padding: .75rem 1rem; font: inherit; color: inherit;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px; outline: none;
+  }
+  input[type=search]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .count { margin: 0 0 .75rem; }
+
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .85rem 1rem; vertical-align: top; }
+  th {
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+    font-weight: 600; border-bottom: 1px solid var(--border);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--border); }
+  tbody tr:hover { background: var(--row-hover); }
+  td.game { font-weight: 600; white-space: nowrap; }
+  td.details { color: var(--muted); font-size: .925rem; }
+
+  .badge {
+    display: inline-block; padding: .15rem .6rem; border-radius: 999px;
+    font-size: .8rem; font-weight: 600; white-space: nowrap;
+  }
+  .badge.working { background: var(--ok-bg); color: var(--ok-fg); }
+  .badge.not-working { background: var(--bad-bg); color: var(--bad-fg); }
+  .badge.untested { background: var(--todo-bg); color: var(--todo-fg); }
+  .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+  .chip { background: var(--chip-bg); border-radius: 6px; padding: .05rem .45rem; font-size: .8rem; white-space: nowrap; }
+  .none { color: var(--muted); }
+
+  .message { padding: 2rem 1rem; text-align: center; color: var(--muted); }
+  .message:empty { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>AROS CD32 Game Compatibility</h1>
+      <p class="intro">CD32 games booted from CD under the AROS m68k-amiga ROM.</p>
+    </div>
+    <div class="controls">
+      <div class="theme-switch" role="group" aria-label="Theme">
+        <button type="button" value="system">System</button>
+        <button type="button" value="light">Light</button>
+        <button type="button" value="dark">Dark</button>
+      </div>
+      <div class="search">
+        <label for="search">Filter</label>
+        <input type="search" id="search" placeholder="Game name" autocomplete="off" autofocus>
+      </div>
+    </div>
+  </header>
+
+  <dl class="meta">
+    <dt>Tested on</dt><dd id="setup">…</dd>
+    <dt>Tested commit</dt><dd id="commit">…</dd>
+  </dl>
+
+  <div class="count" id="count"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="message" id="message"></div>
+  </div>
+</main>
+
+<script>
+document.querySelectorAll('.theme-switch button').forEach(b => b.addEventListener('click', () => {
+  if (b.value === 'system') localStorage.removeItem('theme');
+  else localStorage.setItem('theme', b.value);
+  applyTheme();
+}));
+applyTheme();
+
+const SOURCE = '../CD32-COMPATIBILITY.md';
+const COMMIT_URL = 'https://github.com/warpdesign/AROS/commit/';
+
+function renderHeader(md) {
+  const setup = md.match(/^\*\*Tested on:\*\*\s*(.+)$/m);
+  document.getElementById('setup').textContent = setup ? setup[1].trim() : 'not recorded yet';
+
+  const el = document.getElementById('commit');
+  const m = md.match(/^\*\*Tested commit:\*\*\s*`([0-9a-f]{7,40})`/m);
+  if (!m) {
+    el.textContent = 'not recorded yet';
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = COMMIT_URL + m[1];
+  const code = document.createElement('code');
+  code.textContent = m[1];
+  a.appendChild(code);
+  el.replaceChildren(a);
+}
+
+function splitRow(line) {
+  return line.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+}
+
+function parseGames(md) {
+  const lines = md.split('\n');
+  const start = lines.findIndex(l => /^##\s+Games\s*$/.test(l));
+  if (start < 0) throw new Error('No "## Games" section found');
+  const table = [];
+  for (let i = start + 1; i < lines.length; i++) {
+    const l = lines[i].trim();
+    if (l.startsWith('|')) table.push(l);
+    else if (table.length) break;
+  }
+  const [header, , ...body] = table;
+  return { columns: splitRow(header), rows: body.map(splitRow) };
+}
+
+function el(tag, className, text) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+function renderCell(column, text) {
+  if (column === 'Game') return el('td', 'game', text);
+  if (column === 'Details') return el('td', 'details', text === '—' ? '' : text);
+
+  const td = el('td');
+  if (column === 'Status') {
+    const label = text.replace(/^[^\p{L}]+/u, '');
+    td.appendChild(el('span', 'badge ' + label.toLowerCase().replace(/\s+/g, '-'), label));
+  } else if (column === 'Tested') {
+    const stages = text.split(',').map(s => s.trim()).filter(s => s && s !== '—');
+    if (stages.length) {
+      const chips = el('div', 'chips');
+      for (const s of stages) chips.appendChild(el('span', 'chip', s));
+      td.appendChild(chips);
+    } else {
+      td.appendChild(el('span', 'none', '—'));
+    }
+  } else {
+    td.textContent = text;
+  }
+  return td;
+}
+
+function render(columns, rows) {
+  const head = document.getElementById('head');
+  const tbody = document.getElementById('rows');
+  const search = document.getElementById('search');
+  const count = document.getElementById('count');
+  const message = document.getElementById('message');
+  const gameCol = columns.indexOf('Game');
+
+  for (const c of columns) head.appendChild(el('th', null, c));
+
+  const trs = rows.map(cells => {
+    const tr = document.createElement('tr');
+    cells.forEach((text, i) => tr.appendChild(renderCell(columns[i], text)));
+    tbody.appendChild(tr);
+    return { tr, name: cells[gameCol].toLowerCase() };
+  });
+
+  function filter() {
+    const query = search.value.trim().toLowerCase();
+    let shown = 0;
+    for (const { tr, name } of trs) {
+      const match = name.includes(query);
+      tr.hidden = !match;
+      if (match) shown++;
+    }
+    count.textContent = `Total tested games: ${trs.length}` +
+      (query ? ` (${shown} ${shown === 1 ? 'game' : 'games'} matching '${search.value.trim()}')` : '');
+    message.textContent = shown ? '' : 'No game matches that name.';
+  }
+
+  search.addEventListener('input', filter);
+  filter();
+}
+
+fetch(SOURCE, { cache: 'no-cache' })
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.text(); })
+  .then(md => { renderHeader(md); const { columns, rows } = parseGames(md); render(columns, rows); })
+  .catch(err => {
+    document.getElementById('message').textContent =
+      `Could not load ${SOURCE}: ${err.message}. Serve this directory over HTTP (e.g. "python3 -m http.server" from arch/m68k-amiga).`;
+  });
+</script>
+</body>
+</html>
