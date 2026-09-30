@@ -22,12 +22,12 @@ A title only counts as working for the stages listed.
 
 **Tested on:** Copperline 1.0.0-rc.1, stock CD32 configuration, 2 MiB Chip RAM only
 
-**Tested commit:** `0fa13c0639d281605f239f631156598439dde8b2`
+**Tested commit:** `82c536f6ecd4881037a5ebb07d67879fad3d7546`
 
 **Test dates:** 2026-09-29–2026-09-30
 
-Results in this table were reported during manual testing with freshly built
-ROMs whose sources match the upstream commit above.
+Pinball Illusions and Gunship 2000 were retested with ROMs built from the
+upstream commit above. The other results were recorded with an earlier ROM build.
 
 | Game | Status | Tested | Details |
 |---|---|---|---|
@@ -40,11 +40,11 @@ ROMs whose sources match the upstream commit above.
 | Fury of the Furries | 🟢 Working | Intro, Selection screen, Map, In-game | Gameplay with Amiga MOD music works on retest; an earlier run stopped at a black screen after the intro |
 | Gloom | 🔴 Not working | Loading | Loading stops at a gray screen |
 | Guardian | 🟢 Working | Intro, Title screen, In-game, CD audio | Gameplay with CD audio music works |
-| Gunship 2000 | 🟠 Partially working | Cold boot, Reset, Pilot selection | Cold boot stops at a black screen after the MicroProse logo, before the intro; starts after a reset in Copperline, but pilot selection does not work |
+| Gunship 2000 | 🟢 Working | Intro, Selection screen, In-game screen | Reached the gameplay screen; limited gameplay testing |
 | Kid Chaos | 🟢 Working | Intro, Title screen, In-game, CD audio | Gameplay with CD audio works |
 | Liberation: Captive II | 🔴 Not working | Loading | Loading stops at a gray screen |
 | Microcosm | 🟢 Working | Intro, In-game | — |
-| Pinball Illusions | 🟠 Partially working | Intro, Table load, Game start | Intro plays and the table loads, but pressing Play does not start a game; remapping Play did not help |
+| Pinball Illusions | 🟢 Working | Intro, Title screen, In-game | Only the first table tested, for a few seconds |
 | Superfrog | 🟢 Working | Intro, Title screen, In-game | — |
 | Ultimate Body Blows | 🟢 Working | Title screen, Options, Player screen, In-game | — |
 
