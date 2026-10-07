@@ -1,3 +1,4 @@
+# Copyright (C) 2026, The AROS Development Team. All rights reserved.
 name: Publish CD32 compatibility list
 
 on:
@@ -30,6 +31,17 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set up page tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check compatibility page
+        run: node --test arch/m68k-amiga/cd32-compatibility-list/tests/site.test.cjs
+
+      - name: Check desktop and mobile layout
+        run: node arch/m68k-amiga/cd32-compatibility-list/tests/browser-layout.cjs
 
       # Keep the page and the list side by side so its relative fetch works.
       - name: Assemble site

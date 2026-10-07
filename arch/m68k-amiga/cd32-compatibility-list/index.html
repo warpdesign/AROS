@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Copyright (C) 2026, The AROS Development Team. All rights reserved. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -22,14 +23,14 @@
   :root {
     color-scheme: light;
     --bg: #f6f7f9; --card: #fff; --text: #1f2328; --muted: #656d76; --border: #e3e6ea;
-    --accent: #3b6fd8; --row-hover: #f3f6fb;
+    --accent: #3b6fd8; --icon: #656d76; --row-hover: #f3f6fb;
     --ok-bg: #e6f4ea; --ok-fg: #1f7a3a; --bad-bg: #fdecea; --bad-fg: #b3261e;
     --todo-bg: #fff4e0; --todo-fg: #9a5b00; --chip-bg: #eef1f5;
   }
   :root[data-theme=dark] {
     color-scheme: dark;
     --bg: #14171c; --card: #1c2027; --text: #e6e8eb; --muted: #9aa3ad; --border: #2c323b;
-    --accent: #7aa2f7; --row-hover: #222833;
+    --accent: #7aa2f7; --icon: #d0d7de; --row-hover: #222833;
     --ok-bg: #173323; --ok-fg: #7fd69a; --bad-bg: #3a1c1c; --bad-fg: #f2a19b;
     --todo-bg: #3a2c12; --todo-fg: #f0c170; --chip-bg: #2a303a;
   }
@@ -42,7 +43,7 @@
   h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .4rem; letter-spacing: -.01em; }
   .intro { color: var(--muted); margin: 0; }
   header {
-    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+    display: grid; grid-template-columns: minmax(0, 1fr) max-content; align-items: start;
     gap: 1.25rem 2rem; margin-bottom: 1.75rem;
   }
   .controls { display: flex; flex-direction: column; align-items: flex-end; gap: .9rem; }
@@ -60,7 +61,7 @@
   .theme-switch button[aria-pressed=true] { background: var(--chip-bg); color: var(--text); font-weight: 600; }
   .theme-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .toolbar { display: flex; align-items: center; gap: .6rem; }
-  .icon { width: 1.1rem; height: 1.1rem; flex: none; fill: currentColor; }
+  .icon { width: 1.1rem; height: 1.1rem; flex: none; fill: currentColor; color: var(--icon); }
   .icon-link {
     display: inline-flex; align-items: center; justify-content: center; width: 2.3rem; height: 2.3rem;
     color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px;
@@ -71,8 +72,8 @@
     display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem 1.75rem;
     margin-top: 2.5rem; font-size: .9rem;
   }
-  footer a { display: inline-flex; align-items: center; gap: .45rem; color: var(--muted); }
-  footer a:hover { color: var(--text); }  .coffee { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  footer a { display: inline-flex; align-items: center; gap: .45rem; color: var(--accent); }
+  .coffee { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
   code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -126,7 +127,7 @@
   @media (max-width: 640px) {
     main { padding: 1.5rem .75rem 2rem; }
     h1 { font-size: 1.5rem; }
-    header { gap: 1rem; margin-bottom: 1rem; }
+    header { grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 1rem; }
     .controls { width: 100%; align-items: stretch; gap: .6rem; }
     .toolbar { align-self: flex-start; }
     .search input[type=search] { width: 100%; min-width: 0; }
@@ -164,7 +165,7 @@
   <header>
     <div>
       <h1>AROS CD32 Game Compatibility</h1>
-      <p class="intro">CD32 games booted from CD under the AROS m68k-amiga ROM.</p>
+      <p class="intro">Below is a list of CD32 games that have been tested with AROS ROMs.</p>
     </div>
     <div class="controls">
       <div class="toolbar">
@@ -206,7 +207,8 @@
     </a>
     <a href="https://buymeacoffee.com/warpdesign">
       <svg class="icon coffee" aria-hidden="true"><use href="#coffee"/></svg>Buy me a coffee
-    </a>  </footer>
+    </a>
+  </footer>
 </main>
 
 <script>
