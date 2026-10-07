@@ -1,5 +1,5 @@
 [![AROS Logo](http://aros.org/images/toplogo.png?v=1.0)](http://developers.aros.org)
-# AROS Git Repository [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8dd5a86f87064c14ba75f291c045e788)](https://app.codacy.com/gh/aros-development-team/AROS/dashboard)
+# AROS for Amiga & CD32
 
 > [!NOTE]
 > **This is a fork of [aros-development-team/AROS](https://github.com/aros-development-team/AROS)
@@ -7,9 +7,6 @@
 > All changes made here are upstreamed to the original repository.
 >
 > Game results are tracked in the [CD32 compatibility list](https://warpdesign.github.io/AROS/cd32-compatibility-list/).
-
-> This is the main repository for active development of the AROS Operating System.
-> The repository contains the main Operating System components, SDK and Build System.
 
 
 ## Nightly Test Builds
