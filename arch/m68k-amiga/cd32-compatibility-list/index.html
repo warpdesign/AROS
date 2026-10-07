@@ -59,6 +59,20 @@
   .theme-switch button:hover { color: var(--text); }
   .theme-switch button[aria-pressed=true] { background: var(--chip-bg); color: var(--text); font-weight: 600; }
   .theme-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .toolbar { display: flex; align-items: center; gap: .6rem; }
+  .icon { width: 1.1rem; height: 1.1rem; flex: none; fill: currentColor; }
+  .icon-link {
+    display: inline-flex; align-items: center; justify-content: center; width: 2.3rem; height: 2.3rem;
+    color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+  }
+  .icon-link:hover { color: var(--text); text-decoration: none; }
+
+  footer {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem 1.75rem;
+    margin-top: 2.5rem; font-size: .9rem;
+  }
+  footer a { display: inline-flex; align-items: center; gap: .45rem; color: var(--muted); }
+  footer a:hover { color: var(--text); }  .coffee { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
   code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -92,6 +106,7 @@
   tbody tr:hover { background: var(--row-hover); }
   td.game { font-weight: 600; white-space: nowrap; }
   td.details { color: var(--muted); font-size: .925rem; }
+  td.year { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
   .badge {
     display: inline-block; padding: .15rem .6rem; border-radius: 999px;
@@ -113,7 +128,7 @@
     h1 { font-size: 1.5rem; }
     header { gap: 1rem; margin-bottom: 1rem; }
     .controls { width: 100%; align-items: stretch; gap: .6rem; }
-    .theme-switch { align-self: flex-start; }
+    .toolbar { align-self: flex-start; }
     .search input[type=search] { width: 100%; min-width: 0; }
     .meta { grid-template-columns: 1fr; gap: .15rem; padding: .75rem; margin-bottom: 1rem; }
     .meta dd { overflow-wrap: anywhere; }
@@ -128,7 +143,9 @@
     tbody tr[hidden] { display: none; }
     tbody tr + tr { border-top: 1px solid var(--border); }
     tbody td, tbody tr + tr td { padding: 0; border: 0; }
-    td.game { white-space: normal; font-size: .925rem; line-height: 1.35; }
+    td.game { white-space: normal; font-size: .925rem; line-height: 1.35; grid-area: 1 / 1; }
+    td.status { grid-area: 1 / 2; }
+    td.year { grid-area: 2 / 1 / auto / -1; font-size: .8rem; line-height: 1.2; margin-top: -.25rem; }
     td.tested, td.details { grid-column: 1 / -1; }
     td.details { font-size: .85rem; line-height: 1.4; overflow-wrap: anywhere; }
     td.details:empty { display: none; }
@@ -139,6 +156,10 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <symbol id="github" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+  <symbol id="coffee" viewBox="0 0 24 24"><path d="M3 8h13v5a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2a3 3 0 0 1 0 6h-2"/><path d="M7 2.5v2.5M11 2.5v2.5"/><path d="M2 21h16"/></symbol>
+</svg>
 <main>
   <header>
     <div>
@@ -146,10 +167,15 @@
       <p class="intro">CD32 games booted from CD under the AROS m68k-amiga ROM.</p>
     </div>
     <div class="controls">
-      <div class="theme-switch" role="group" aria-label="Theme">
-        <button type="button" value="system">System</button>
-        <button type="button" value="light">Light</button>
-        <button type="button" value="dark">Dark</button>
+      <div class="toolbar">
+        <div class="theme-switch" role="group" aria-label="Theme">
+          <button type="button" value="system">System</button>
+          <button type="button" value="light">Light</button>
+          <button type="button" value="dark">Dark</button>
+        </div>
+        <a class="icon-link" href="https://github.com/warpdesign/AROS" aria-label="GitHub repository" title="GitHub repository">
+          <svg class="icon" aria-hidden="true"><use href="#github"/></svg>
+        </a>
       </div>
       <div class="search">
         <label for="search">Filter</label>
@@ -161,6 +187,7 @@
   <dl class="meta">
     <dt>Tested on</dt><dd id="setup">…</dd>
     <dt>Tested commit</dt><dd id="commit">…</dd>
+    <dt>ROMs</dt><dd id="roms">…</dd>
   </dl>
 
   <div class="count" id="count"></div>
@@ -172,6 +199,14 @@
     </table>
     <div class="message" id="message"></div>
   </div>
+
+  <footer>
+    <a href="https://github.com/warpdesign/AROS">
+      <svg class="icon" aria-hidden="true"><use href="#github"/></svg>warpdesign/AROS on GitHub
+    </a>
+    <a href="https://buymeacoffee.com/warpdesign">
+      <svg class="icon coffee" aria-hidden="true"><use href="#coffee"/></svg>Buy me a coffee
+    </a>  </footer>
 </main>
 
 <script>
@@ -184,23 +219,37 @@ applyTheme();
 
 const SOURCE = '../CD32-COMPATIBILITY.md';
 const COMMIT_URL = 'https://github.com/aros-development-team/AROS/commit/';
+const ROMS_URL = 'https://github.com/warpdesign/AROS/releases/download/';
 
 function renderHeader(md) {
   const setup = md.match(/^\*\*Tested on:\*\*[^\S\n]*([^\n]+(?:\n[^\n]+)*)/m);
   document.getElementById('setup').textContent = setup ? setup[1].trim().replace(/\s+/g, ' ') : 'not recorded yet';
 
-  const el = document.getElementById('commit');
-  const m = md.match(/^\*\*Tested commit:\*\*\s*`([0-9a-f]{7,40})`/m);
+  const commitEl = document.getElementById('commit');
+  const romsEl = document.getElementById('roms');
+  const m = md.match(/^\*\*Tested commit:\*\*\s*`([0-9a-f]{7,40})`(?:[^\S\n]*\((\d{4}-\d{2}-\d{2})\))?/m);
   if (!m) {
-    el.textContent = 'not recorded yet';
+    commitEl.textContent = romsEl.textContent = 'not recorded yet';
     return;
   }
+  const [, hash, date] = m;
   const a = document.createElement('a');
-  a.href = COMMIT_URL + m[1];
+  a.href = COMMIT_URL + hash;
   const code = document.createElement('code');
-  code.textContent = m[1];
+  code.textContent = hash;
   a.appendChild(code);
-  el.replaceChildren(a);
+  commitEl.replaceChildren(a);
+  if (date) commitEl.append(` (${date})`);
+
+  if (!date) {
+    romsEl.textContent = 'not published yet';
+    return;
+  }
+  const short = hash.slice(0, 10);
+  const zip = `aros-amiga-rom-${short}-${date}.zip`;
+  const dl = el('a', null, `Download ${zip}`);
+  dl.href = `${ROMS_URL}rom-${short}/${zip}`;
+  romsEl.replaceChildren(dl);
 }
 
 function splitRow(line) {
