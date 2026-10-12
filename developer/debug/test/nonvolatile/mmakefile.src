@@ -1,0 +1,17 @@
+# Copyright (C) 2026, The AROS Development Team. All rights reserved.
+
+include $(SRCDIR)/config/aros.cfg
+USER_INCLUDES := -I$(GENDIR)/workbench/libs/nonvolatile/nonvolatile/include \
+                 -I$(GENDIR)/workbench/libs/nonvolatile/nvdisk/nvdisk/include
+USER_LDFLAGS := -static
+
+#MM- test : test-nonvolatile
+#MM- test-quick : test-nonvolatile-quick
+#MM- test-nonvolatile : test-nonvolatile-headers
+#MM- test-nonvolatile-quick : test-nonvolatile-headers-quick
+#MM test-nonvolatile-headers : includes linklibs workbench-libs-nonvolatile-includes workbench-libs-nvdisk-includes
+
+%build_progs mmake=test-nonvolatile-headers \
+    files=headers targetdir=$(AROS_TESTS)/nonvolatile
+
+%common

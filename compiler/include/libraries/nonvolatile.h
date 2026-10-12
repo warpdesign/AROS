@@ -2,12 +2,13 @@
 #define  LIBRARIES_NONVOLATILE_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2026, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 #include  <exec/types.h>
 #include  <exec/nodes.h>
+#include  <exec/lists.h>
 
 
 struct NVInfo
