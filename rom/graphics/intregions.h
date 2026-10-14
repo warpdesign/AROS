@@ -56,34 +56,7 @@ BOOL clearrectrect(struct Rectangle *clearrect, struct Rectangle *rect,
 #define Width(rr)  (MaxX(rr) - MinX(rr) + 1)
 #define Height(rr) (MaxY(rr) - MinY(rr) + 1)
 
-#define _DoRectsOverlap(Rect, x1, y1, x2, y2) \
-(                                             \
-    y1 <= (Rect)->MaxY &&                     \
-    y2 >= (Rect)->MinY &&                     \
-    x1 <= (Rect)->MaxX &&                     \
-    x2 >= (Rect)->MinX                        \
-)
-
-#define overlap(a,b) _DoRectsOverlap(&(a), (b).MinX, (b).MinY, (b).MaxX, (b).MaxY)
-
-#define _AndRectRect(rect1, rect2, intersect)                  \
-({                                                             \
-    BOOL res;                                                  \
-                                                               \
-    if (overlap(*(rect1), *(rect2)))                           \
-    {                                                          \
-	(intersect)->MinX = MAX((rect1)->MinX, (rect2)->MinX); \
- 	(intersect)->MinY = MAX((rect1)->MinY, (rect2)->MinY); \
-	(intersect)->MaxX = MIN((rect1)->MaxX, (rect2)->MaxX); \
- 	(intersect)->MaxY = MIN((rect1)->MaxY, (rect2)->MaxY); \
-                                                               \
-	res = TRUE;                                            \
-    }                                                          \
-    else                                                       \
-        res = FALSE;                                           \
-                                                               \
-    res;                                                       \
-})
+#include "rectintersect.h"
 
 #define _AreRectsEqual(Rect1, Rect2)  \
 (                                     \

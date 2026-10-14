@@ -1,0 +1,14 @@
+# Copyright (C) 2026, The AROS Development Team. All rights reserved.
+
+include $(SRCDIR)/config/aros.cfg
+USER_LDFLAGS := -static
+
+#MM test-graphics-romhelpers : test-graphics-rectangles
+#MM- test-graphics-romhelpers-quick : test-graphics-rectangles-quick
+#MM test-graphics-rectangles : includes linklibs
+
+%build_prog mmake=test-graphics-rectangles \
+    files="rectangles $(SRCDIR)/rom/graphics/rectintersect" \
+    progname=rectangles targetdir=$(AROS_TESTS)/graphics/romhelpers
+
+%common

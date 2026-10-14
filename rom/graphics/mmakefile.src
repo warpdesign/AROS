@@ -1,10 +1,16 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+GFX_SHARED_RECT_INTERSECTION ?= 0
+GFX_SHARED_DRIVER_DATA ?= 0
+-include $(SRCDIR)/arch/$(CPU)-$(ARCH)/graphics/make.opts
+
 USER_INCLUDES := -I$(SRCDIR)/rom/cgfx
 USER_CFLAGS :=  $(AROSROM_MODULE_CFLAGS)
 USER_CPPFLAGS := \
                -DUSE_EXEC_DEBUG \
+	       -DGFX_SHARED_RECT_INTERSECTION=$(GFX_SHARED_RECT_INTERSECTION) \
+	       -DGFX_SHARED_DRIVER_DATA=$(GFX_SHARED_DRIVER_DATA) \
 	       -D__OOP_NOMETHODBASES__
 USER_LDFLAGS := -static
 
@@ -23,6 +29,13 @@ FILES	  := \
 	dispinfo \
 	gfxfuncsupport \
 	cgx_support
+
+ifeq ($(GFX_SHARED_RECT_INTERSECTION),1)
+FILES += rectintersect
+endif
+ifeq ($(GFX_SHARED_DRIVER_DATA),1)
+FILES += driverdata
+endif
 
 
 FUNCTIONS := \

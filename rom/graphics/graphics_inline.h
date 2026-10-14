@@ -1,3 +1,4 @@
+/* Copyright (C) 2026, The AROS Development Team. All rights reserved. */
 
 /*
  * Select a driver to call for operations between struct BitMap (source) and OOP_Object (destination).
@@ -61,7 +62,16 @@ static inline OOP_Object *SelectDriverObject(struct BitMap *srcbm, OOP_Object *d
     return gfxhidd;
 }
 
+#ifndef GFX_SHARED_DRIVER_DATA
+#define GFX_SHARED_DRIVER_DATA 0
+#endif
+
+#if !GFX_SHARED_DRIVER_DATA || defined(GFX_DRIVER_DATA_IMPLEMENTATION)
+#if GFX_SHARED_DRIVER_DATA
+OOP_Object *_GfxGetDriverData(struct RastPort *rp, struct GfxBase *GfxBase)
+#else
 static inline OOP_Object *GetDriverData(struct RastPort *rp, struct GfxBase *GfxBase)
+#endif
 {
     /*
      * Here we do a little bit of hacky-wacky magic.
@@ -126,6 +136,12 @@ static inline OOP_Object *GetDriverData(struct RastPort *rp, struct GfxBase *Gfx
     OOP_OCLASS(gc) = CDD(GfxBase)->gcClass;	/* Set class pointer			*/
     return gc;					/* Our handmade object is ready to use!	*/
 }
+#endif
+
+#if GFX_SHARED_DRIVER_DATA
+OOP_Object *_GfxGetDriverData(struct RastPort *rp, struct GfxBase *GfxBase);
+#define GetDriverData _GfxGetDriverData
+#endif
 
 static inline BOOL GetRPClipRectangleForLayer(struct RastPort *rp, struct Layer *lay, struct Rectangle *r, struct GfxBase *GfxBase)
 {

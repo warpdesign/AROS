@@ -1,0 +1,6 @@
+# Copyright (C) 2026, The AROS Development Team. All rights reserved.
+
+# Keep the repeated clipping operation in one ROM function. Other targets
+# retain the generic inline rectangle-intersection implementation.
+GFX_SHARED_RECT_INTERSECTION := 1
+GFX_SHARED_DRIVER_DATA := 1
